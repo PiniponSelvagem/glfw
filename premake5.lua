@@ -1,73 +1,74 @@
 project "GLFW"
-	kind "StaticLib"
-	language "C"
-	staticruntime "off"
+kind "StaticLib"
+language "C"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-obj/" .. outputdir .. "/%{prj.name}")
+targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+objdir ("bin-obj/" .. outputdir .. "/%{prj.name}")
 
-	files {
-		"include/GLFW/glfw3.h",
-		"include/GLFW/glfw3native.h",
-		"src/glfw_config.h",
-		"src/context.c",
-		"src/init.c",
-		"src/input.c",
-		"src/monitor.c",
-		"src/vulkan.c",
-		"src/window.c"
-	}
+files {
+    "include/GLFW/glfw3.h",
+    "include/GLFW/glfw3native.h",
+    "src/glfw_config.h",
+    "src/context.c",
+    "src/init.c",
+    "src/input.c",
+    "src/monitor.c",
+    "src/vulkan.c",
+    "src/window.c"
+}
 
-	filter "system:linux"
-		pic "On"
+filter "system:windows"
+    systemversion "latest"
+    staticruntime "On"
 
-		systemversion "latest"
-		
-		files {
-			"src/x11_init.c",
-			"src/x11_monitor.c",
-			"src/x11_window.c",
-			"src/xkb_unicode.c",
-			"src/posix_time.c",
-			"src/posix_thread.c",
-			"src/glx_context.c",
-			"src/egl_context.c",
-			"src/osmesa_context.c",
-			"src/linux_joystick.c"
-		}
+    files {
+        "src/win32_init.c",
+        "src/win32_joystick.c",
+        "src/win32_monitor.c",
+        "src/win32_time.c",
+        "src/win32_thread.c",
+        "src/win32_window.c",
+        "src/wgl_context.c",
+        "src/egl_context.c",
+        "src/osmesa_context.c"
+    }
 
-		defines {
-			"_GLFW_X11"
-		}
+    defines { 
+        "_GLFW_WIN32",
+        "_CRT_SECURE_NO_WARNINGS"
+    }
 
-	filter "system:windows"
-		systemversion "latest"
+	-- buildoptions{
+    --     "/MT"
+    -- }
 
-		files {
-			"src/win32_init.c",
-			"src/win32_joystick.c",
-			"src/win32_monitor.c",
-			"src/win32_time.c",
-			"src/win32_thread.c",
-			"src/win32_window.c",
-			"src/wgl_context.c",
-			"src/egl_context.c",
-			"src/osmesa_context.c"
-		}
+filter "system:linux"
+    pic "On"
 
-		defines { 
-			"_GLFW_WIN32",
-			"_CRT_SECURE_NO_WARNINGS"
-		}
+    systemversion "latest"
+    staticruntime "On"
 
-		links {
-			"Dwmapi.lib"
-		}
+    files {
+        "src/x11_init.c",
+        "src/x11_monitor.c",
+        "src/x11_window.c",
+        "src/xkb_unicode.c",
+        "src/posix_time.c",
+        "src/posix_thread.c",
+        "src/glx_context.c",
+        "src/egl_context.c",
+        "src/osmesa_context.c",
+        "src/linux_joystick.c"
+    }
 
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
+    defines {
+        "_GLFW_X11"
+    }
 
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "on"
+filter "configurations:Debug"
+    runtime "Debug"
+    symbols "On"
+
+filter "configurations:Release"
+    runtime "Release"
+    optimize "On"
