@@ -38,10 +38,6 @@ filter "system:windows"
         "_CRT_SECURE_NO_WARNINGS"
     }
 
-	-- buildoptions{
-    --     "/MT"
-    -- }
-
 filter "system:linux"
     pic "On"
 
@@ -72,3 +68,6 @@ filter "configurations:Debug"
 filter "configurations:Release"
     runtime "Release"
     optimize "On"
+
+filter { "system:windows", "configurations:Release" }
+    buildoptions "/MT"
